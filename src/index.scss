@@ -1,0 +1,33 @@
+@import './task-app/components/header/styles/header.scss';
+@import './task-app/components/top-actions/styles/top-actions.scss';
+@import './task-app/components/main/main.scss';
+@import './task-app/components/arrow/arrow.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+  color: gray;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  background-color: #fff;
+  border: none;
+  height: 100%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+body {
+  background-color: rgb(226, 229, 229);
+  scroll-behavior: smooth;
+  width: 100vw;
+  overflow: hidden;
+}

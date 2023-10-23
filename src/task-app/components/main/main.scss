@@ -1,0 +1,6 @@
+@import '../taskList/task-list.scss';
+@import '../taskItem/taslItem/task-item.scss';
+.main {
+  min-height: 80vh;
+  overflow: hidden;
+}

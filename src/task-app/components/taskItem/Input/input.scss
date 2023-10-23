@@ -1,0 +1,11 @@
+.input {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  background-color: transparent;
+
+  & input {
+    border: 1px solid rgb(225, 222, 222);
+    padding: 10px;
+  }
+}

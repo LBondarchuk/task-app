@@ -1,0 +1,26 @@
+.top-actions {
+  display: flex;
+  gap: 8px;
+
+  &__last-view {
+    background-color: rgb(106, 143, 217);
+    color: #fff;
+  }
+
+  & button {
+    padding: 0 15px;
+
+    & img {
+      opacity: 0.6;
+    }
+  }
+
+  &__change-size {
+    display: flex;
+    gap: 3px;
+    &--size {
+      padding: 15px;
+      background-color: #fff;
+    }
+  }
+}

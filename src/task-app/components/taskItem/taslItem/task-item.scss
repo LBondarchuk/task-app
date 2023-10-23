@@ -1,0 +1,80 @@
+@import '../wthatCreate/what-create.scss';
+@import '../Input/input.scss';
+
+.task-item {
+  cursor: move;
+  min-width: 90px;
+  max-width: fit-content;
+  transition: all 0.3s ease;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    padding-top: 30px;
+    margin: 0 auto;
+  }
+  &__content {
+    padding-bottom: 30px;
+    display: flex;
+    align-items: center;
+    border: 1px dashed gray;
+    color: #fff;
+    padding: 10px;
+  }
+
+  &__input {
+    border: 1px solid rgb(225, 222, 222);
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+  }
+  &__actions {
+    &--control {
+      position: absolute;
+      left: 5px;
+      display: flex;
+      gap: 5px;
+    }
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__button {
+    z-index: 1000;
+    background-color: gray;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 19px;
+    transition: all 0.3s ease;
+
+    &--remove {
+      background-color: rgb(245, 77, 77);
+      transform: rotate(45deg);
+    }
+
+    &--save {
+      background-color: rgb(7, 165, 96);
+    }
+  }
+
+  &__children {
+    padding-bottom: 30px;
+    border-top: 1px solid gray;
+    display: flex;
+    gap: 100px;
+    justify-content: space-between;
+  }
+
+  &__border {
+    width: 1px;
+    height: 30px;
+    background-color: gray;
+    margin: 0 auto;
+  }
+}

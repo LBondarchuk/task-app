@@ -1,0 +1,26 @@
+.what-create {
+  position: absolute;
+  top: 50px;
+  width: 300px;
+  padding: 30px;
+  background-color: #fff;
+  z-index: 1000;
+
+  &__title {
+    color: black;
+    text-align: center;
+    padding: 20px;
+  }
+  &__actions {
+    width: fit-content;
+    margin: 0 auto;
+
+    display: flex;
+    gap: 10px;
+    & button {
+      background-color: gray;
+      color: #f0ebeb;
+      padding: 10px;
+    }
+  }
+}
