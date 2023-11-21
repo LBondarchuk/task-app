@@ -18,10 +18,7 @@ export const Header: React.FC<Props> = ({
 }) => {
   return (
     <header className='header'>
-      <div className='header__servises'>
-        <h1>Services</h1>
-        <span>{servises}</span>
-      </div>
+      <div className='header__servises'></div>
       <TopActions
         setScale={setScale}
         scale={scale}

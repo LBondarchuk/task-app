@@ -1,6 +1,3 @@
-export type TaskItem = {
-  content: string;
-  id: number;
-  category: string;
-  children: TaskItem[];
+export type Field = {
+  [key: string]: any;
 };

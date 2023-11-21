@@ -1,117 +1,100 @@
-import { useEffect, useState } from 'react';
-import { Field } from '../taskItem/taslItem/TaskItem';
-import { TaskItem } from '../../../utils/types';
-import { getTotalServises } from '../../../utils/fieldActions';
+import React, { useState } from 'react';
+import { Field } from '../../../utils/types';
+import { FIELD } from '../taskItem/taslItem/TaskItem';
+
 type Props = {
   scale: number;
   moveLeft: number;
   moveTop: number;
   setMoveLeft: (value: number) => void;
   setMoveTop: (value: number) => void;
-  getServisesLeft: (value: number) => void;
+  position: boolean;
+  setPosition: (value: boolean) => void;
 };
+
 export const TaskList: React.FC<Props> = ({
   scale,
   moveLeft,
   moveTop,
   setMoveLeft,
   setMoveTop,
-  getServisesLeft,
 }) => {
-  const [position, setPosition] = useState(false);
-  const [items, setItems] = useState<TaskItem[]>([
-    {
-      content: 'Categories',
-      id: 0,
-      children: [],
-      category: 'category',
+  const initialTreeState: Field = {
+    path: [],
+    children: {
+      '0': {
+        path: ['0'],
+        content: 'Categories',
+        id: '0',
+        category: 'category',
+        children: {},
+      },
     },
-  ]);
-
-  const handleMoseMove = (e: MouseEvent) => {
-    if (position) {
-      setMoveLeft(e.clientX);
-      setMoveTop(e.clientY);
-    }
   };
-  useEffect(() => {
-    if (position) {
-      document.addEventListener('mousemove', handleMoseMove);
-    }
-    return () => document.removeEventListener('mousemove', handleMoseMove);
-  }, [position]);
 
-  useEffect(() => {
-    getServisesLeft(getTotalServises(items));
-  }, [items]);
+  const [tree, setTree] = useState<Field>(initialTreeState);
 
-  const createList = (list: TaskItem[]) => {
-    return list.map((item, i) => {
-      if (i === 0) {
-        return (
-          <Field
-            item={item.content}
-            translate={list.length !== 1 ? '-50%' : '0'}
-            childrenLength={list.length}
-            id={item.id}
-            items={items}
-            setItems={(newItems) => setItems(newItems)}
-            category={item.category}
-            setPosition={() => setPosition(!position)}
-          >
-            {createList(item.children)}
-          </Field>
-        );
-      }
+  const [isDragging, setIsDragging] = useState(false);
 
-      if (i === list.length - 1) {
-        return (
-          <Field
-            item={item.content}
-            translate={list.length !== 1 ? '50%' : '0'}
-            childrenLength={list.length}
-            id={item.id}
-            items={items}
-            setItems={(newItems) => setItems(newItems)}
-            category={item.category}
-            setPosition={() => setPosition(!position)}
-          >
-            {createList(item.children)}
-          </Field>
-        );
-      }
+  const createList = (list: Field) => {
+    return Object.keys(list.children).map((key, i) => {
+      const field = list.children[key];
+      const isFirstChild = i === 0;
+      const isLastChild = i === Object.keys(list.children).length - 1;
 
       return (
-        <Field
-          item={item.content}
-          childrenLength={list.length}
-          id={item.id}
-          items={items}
-          setItems={(newItems) => setItems(newItems)}
-          category={item.category}
-          setPosition={() => setPosition(!position)}
+        <FIELD
+          key={field.id}
+          field={field}
+          translate={
+            isFirstChild && Object.keys(list.children).length > 1
+              ? '-50%'
+              : isLastChild && Object.keys(list.children).length > 1
+              ? '50%'
+              : '0'
+          }
+          tree={tree}
+          setTree={setTree}
         >
-          {createList(item.children)}
-        </Field>
+          {createList(field)}
+        </FIELD>
       );
     });
+  };
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    const offsetX = e.clientX - moveLeft;
+    const offsetY = e.clientY - moveTop;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    function handleMouseMove(e: MouseEvent) {
+      const newX = e.clientX - offsetX;
+      const newY = e.clientY - offsetY;
+      setMoveLeft(newX);
+      setMoveTop(newY);
+    }
+
+    function handleMouseUp() {
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    }
   };
 
   return (
     <div
       className='tasl-list'
-      onDoubleClick={() => {
-        if (position) {
-          setPosition(false);
-        }
-      }}
       style={{
-        left: !position && moveLeft === 50 ? moveLeft + '%' : moveLeft,
-        top: !position && moveTop === 35 ? moveTop + '%' : moveTop,
-        transform: `translateX(-50%) scale(${scale + '%'})`,
+        cursor: isDragging ? 'grabbing' : 'grab',
+        left: moveLeft + 'px',
+        top: moveTop + 'px',
+        transform: `scale(${scale}%) translateX(-50%)`,
       }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={() => setIsDragging(false)}
     >
-      {createList(items)}
+      {createList(tree)}
     </div>
   );
 };

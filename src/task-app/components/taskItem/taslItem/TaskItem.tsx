@@ -1,59 +1,64 @@
 import { useEffect, useState } from 'react';
 import { WhatCreate } from '../wthatCreate/WahatCreate';
-import { addEmptyField, changeFieldValue, removeField } from '../../../../utils/fieldActions';
-import { TaskItem } from '../../../../utils/types';
+import { forEachField } from '../../../../utils/fieldsActions/fieldActions';
+import { Field } from '../../../../utils/types';
+import { addNewItem } from '../../../../utils/fieldsActions/add/addField';
+import { changeFieldValue } from '../../../../utils/fieldsActions/change/changeField';
+import { removeFieldByPath } from '../../../../utils/fieldsActions/delete/geleteField';
 
 type Props = {
-  onDoubleClick?: () => void;
   children: JSX.Element[];
-  item: string;
+  field: Field;
   translate?: string;
-  childrenLength: number;
-  id: number;
   handleAdd?: (id: number) => void;
-  items: TaskItem[];
-  setItems: (item: TaskItem[]) => void;
-  category: string;
-  setPosition: () => void;
+  tree: Field;
+  setTree: (field: Field) => void;
 };
 
-export const Field: React.FC<Props> = ({
-  item,
-  category,
-  children,
-  translate,
-  id,
-  items,
-  setItems,
-  setPosition,
-}) => {
-  const [value, setValue] = useState(item);
+export const FIELD: React.FC<Props> = ({ field, children, translate, tree, setTree }) => {
+  const [value, setValue] = useState(field.content);
   const [showModal, setShowModal] = useState(false);
-  const [whatToCreate, setWhatToCreate] = useState<null | 'category' | 'servise'>(null);
+  const [whatToCreate, setWhatToCreate] = useState<'category' | 'service' | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [hasEmpty, setHesEmpty] = useState(false);
 
   useEffect(() => {
     if (whatToCreate !== null) {
-      setItems(addEmptyField(id, items, whatToCreate));
+      addNewItem(tree, field.path, '', whatToCreate, setTree);
       setWhatToCreate(null);
     }
   }, [whatToCreate]);
+  const isFieldEmpty = (field: Field) => {
+    setHesEmpty(field.content === '');
+  };
+
+  useEffect(() => forEachField(tree, isFieldEmpty), [tree]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      changeFieldValue(tree, setTree, field.path, value);
+      setIsEditing(false);
+    }
+  };
+
   return (
     <div
-      className='task-item'
+      className='task-field'
       style={{
         transform: `translateX(${translate})`,
       }}
     >
-      <div className='task-item__item' onDoubleClick={setPosition}>
+      <div className='task-item__item'>
         <div
           className='task-item__content'
           style={{
-            backgroundColor: category === 'category' ? 'rgb(207, 134, 62)' : 'rgb(68, 159, 159)',
-            padding: !item || isEditing ? 0 : 10,
+            backgroundColor:
+              field.category === 'category' ? 'rgb(207, 134, 62)' : 'rgb(68, 159, 159)',
+            padding: !field.content || isEditing ? 0 : 10,
           }}
         >
-          {id !== 0 && (
+          {field.id !== '0' && (
             <div
               className='task-item__border'
               style={{
@@ -64,12 +69,13 @@ export const Field: React.FC<Props> = ({
               }}
             ></div>
           )}
-          {!item || isEditing ? (
+          {!field.content || isEditing ? (
             <input
               value={value}
               className='task-item__input'
               onChange={(e) => setValue(e.target.value)}
               placeholder='Add title'
+              onKeyDown={handleKeyDown}
             />
           ) : (
             value
@@ -77,38 +83,39 @@ export const Field: React.FC<Props> = ({
         </div>
         <div className='task-item__actions'>
           <div className='task-item__actions--control'>
-            {item && !isEditing && (
+            {field && !isEditing && field.content && (
               <button
                 className='task-item__button'
+                disabled={hasEmpty}
                 onClick={() => setShowModal(!showModal)}
                 style={{ opacity: 1 }}
               >
-                {showModal && <WhatCreate response={setWhatToCreate} />}+
+                <WhatCreate
+                  show={showModal}
+                  response={setWhatToCreate}
+                  onHide={() => setShowModal(false)}
+                />
+                +
               </button>
             )}
-            {id !== 0 && item && !isEditing && (
+            {field.id !== '0' && field.content && !isEditing && (
               <button className='task-item__button' onClick={() => setIsEditing(true)}>
                 <img src='pen.png' alt='pen icon' width={15} />
               </button>
             )}
-            {id !== 0 && (
+            {field.id !== '0' && (
               <button
                 className='task-item__button task-item__button--remove'
-                onClick={() => setItems(removeField(id, items))}
+                onClick={() => removeFieldByPath(tree, setTree, field.path)}
               >
                 +
               </button>
             )}
-            {(!item || isEditing) && id !== 0 && (
+            {field.id !== '0' && (!field.content || isEditing) && (
               <button
                 className='task-item__button task-item__button--save'
                 onClick={() => {
-                  setIsEditing(true);
-                  setItems(
-                    isEditing
-                      ? changeFieldValue(id, items, value)
-                      : changeFieldValue(id, items, value),
-                  );
+                  changeFieldValue(tree, setTree, field.path, value);
                   setIsEditing(false);
                 }}
               >

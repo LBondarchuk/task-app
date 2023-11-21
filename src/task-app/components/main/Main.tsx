@@ -1,5 +1,6 @@
 import { TaskList } from '../taskList/TaskList';
 import { Arrow } from '../arrow/Arrow';
+import { useState } from 'react';
 
 type Props = {
   scale: number;
@@ -18,6 +19,7 @@ export const Main: React.FC<Props> = ({
   setMoveTop,
   getServisesLeft,
 }) => {
+  const [position, setPosition] = useState(false);
   return (
     <main className='main'>
       <TaskList
@@ -26,7 +28,8 @@ export const Main: React.FC<Props> = ({
         setMoveTop={setMoveTop}
         moveTop={moveTop}
         setMoveLeft={setMoveLeft}
-        getServisesLeft={getServisesLeft}
+        position={position}
+        setPosition={setPosition}
       />
       <Arrow position='up' handleChange={() => setMoveTop(moveTop - 100)} />
       <Arrow position='down' handleChange={() => setMoveTop(moveTop + 100)} />

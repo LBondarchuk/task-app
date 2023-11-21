@@ -18,8 +18,27 @@ function App() {
     setLastViewW({ y: moveTop, x: moveLeft });
   }, [moveLeft, moveTop]);
 
+  const handleWheel = (e: { ctrlKey: any; preventDefault: () => void; deltaY: number }) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+
+      if (e.deltaY > 0) {
+        setScale((prevScale) => (prevScale > 50 ? prevScale - 10 : prevScale));
+      } else if (e.deltaY < 0) {
+        setScale((prevScale) => (prevScale < 200 ? prevScale + 10 : prevScale));
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.body.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      document.body.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   return (
-    <div className='App'>
+    <div className='App' onWheel={handleWheel}>
       <Header
         setScale={setScale}
         scale={scale}

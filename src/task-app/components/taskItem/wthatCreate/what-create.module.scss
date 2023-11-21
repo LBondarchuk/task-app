@@ -1,0 +1,70 @@
+.modalContainer {
+  position: absolute;
+  top: 50px;
+  width: 300px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 9999;
+  transition: all 0.5s ease;
+  pointer-events: none;
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modalContent {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    transition: transform 0.3s ease-in-out;
+
+    .whatCreate {
+      width: 300px;
+      padding: 30px;
+      background-color: #fff;
+      transition: transform 0.3s ease-in-out;
+
+      .title {
+        color: black;
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+      }
+
+      .actions {
+        width: fit-content;
+        margin: 0 auto;
+        display: flex;
+        gap: 10px;
+
+        & button {
+          background-color: gray;
+          color: #f0ebeb;
+          padding: 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #b5b5b5;
+          }
+        }
+
+        .category {
+          background-color: rgb(207, 134, 62);
+        }
+
+        .service {
+          background-color: rgb(68, 159, 159);
+        }
+      }
+    }
+  }
+}

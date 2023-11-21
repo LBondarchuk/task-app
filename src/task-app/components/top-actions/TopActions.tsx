@@ -34,7 +34,9 @@ export const TopActions: React.FC<Props> = ({
         >
           -
         </button>
-        <button className='top-actions__change-size--size'>{scale}%</button>
+        <button className='top-actions__change-size--size' style={{ pointerEvents: 'none' }}>
+          {scale}%
+        </button>
         <button className='top-actions__change-size--pluse' onClick={() => setScale(scale + 10)}>
           +
         </button>
