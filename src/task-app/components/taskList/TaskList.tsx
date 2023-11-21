@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field } from '../../../utils/types';
 import { FIELD } from '../taskItem/taslItem/TaskItem';
 
@@ -33,7 +33,6 @@ export const TaskList: React.FC<Props> = ({
   };
 
   const [tree, setTree] = useState<Field>(initialTreeState);
-
   const [isDragging, setIsDragging] = useState(false);
 
   const createList = (list: Field) => {
@@ -61,6 +60,14 @@ export const TaskList: React.FC<Props> = ({
       );
     });
   };
+
+  useEffect(() => {
+    const storedTree = localStorage.getItem('taskTree');
+    if (storedTree) {
+      setTree(JSON.parse(storedTree));
+    }
+  }, []);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     const offsetX = e.clientX - moveLeft;

@@ -21,6 +21,8 @@ export const removeFieldByPath = (tree: Field, setTree: (tree: Field) => void, p
     }
 
     setTree(updatedTree);
+
+    localStorage.setItem('taskTree', JSON.stringify(updatedTree));
   } else {
     console.error('Node not found');
   }

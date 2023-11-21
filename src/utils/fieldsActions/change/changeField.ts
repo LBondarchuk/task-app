@@ -27,4 +27,5 @@ export const changeFieldValue = (
 
   const updatedTree = updateTree(tree, 0);
   setTree(updatedTree);
+  localStorage.setItem('taskTree', JSON.stringify(updatedTree));
 };

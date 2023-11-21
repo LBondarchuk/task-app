@@ -37,11 +37,13 @@ export function addNewItem(
         children: {},
       };
 
+      localStorage.setItem('taskTree', JSON.stringify(updatedTree));
+
       setTree(updatedTree);
     } else {
-      console.error('Perent node not found');
+      console.error('Parent node not found');
     }
   } else {
-    console.error('Perent node not found');
+    console.error('Parent node not found');
   }
 }
